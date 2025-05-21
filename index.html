@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen Reunión: Estado y Soluciones MasClima</title>
+    <style>
+        /* Google Fonts Import */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800&family=Open+Sans:wght@400;600&display=swap');
+
+        /* General Styles */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.7;
+            color: #34495e; /* Azul oscuro grisáceo para texto principal */
+            background-color: #ecf0f1; /* Fondo gris muy claro */
+            margin: 0;
+            padding: 0;
+            /* display: flex;  Se controlará con JS */
+            /* flex-direction: column; Se controlará con JS */
+            /* align-items: center; Se controlará con JS */
+        }
+
+        main, footer {
+            display: none; /* Ocultar contenido inicialmente */
+        }
+
+        main.unlocked {
+            display: block; /* O flex si es necesario para el layout interno */
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0;
+        }
+        
+        body.unlocked {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        /* Header Estilizado */
+        .meeting-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); /* Gradiente azul elegante */
+            color: white;
+            padding: 50px 0px 60px 0px;
+            text-align: center;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+            margin-bottom: 40px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .meeting-header h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.8em;
+            margin: 0 0 10px 0;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .meeting-header .date-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1em;
+            font-weight: 500;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        /* Section Styles */
+        section {
+            background-color: #ffffff;
+            margin-bottom: 35px;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+        }
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.9em;
+            color: #2c3e50; /* Azul oscuro para títulos de sección */
+            margin-top: 0;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #3498db;
+            display: inline-block;
+            font-weight: 700;
+        }
+        
+        section p, section li {
+            font-size: 1.05em;
+            color: #525f7f; /* Texto un poco más claro dentro de las secciones */
+            margin-bottom: 15px;
+        }
+        section strong {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Estilos para listas con iconos */
+        section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        section ul li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+        section ul li::before {
+            font-family: "Font Awesome 5 Free"; 
+            content: '\f105'; 
+            position: absolute;
+            left: 0;
+            top: 1px;
+            font-size: 1.1em;
+            color: #3498db;
+            font-weight: 900; 
+        }
+
+        /* Destacados y Alertas */
+        .highlight-box {
+            background-color: #eafaf1; 
+            border-left: 5px solid #2ecc71; 
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .highlight-box.problem {
+            background-color: #fdecea; 
+            border-left-color: #e74c3c; 
+        }
+        .highlight-box.info {
+            background-color: #e8f4fd; 
+            border-left-color: #3498db; 
+        }
+        .highlight-box p {
+            margin: 0;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+        .highlight-box.problem p { color: #c0392b; }
+        .highlight-box.info p { color: #2980b9; }
+        .highlight-box.highlight-box p { color: #27ae60; } /* Esta regla parece redundante, la anterior .highlight-box p ya lo cubre si es verde */
+
+
+        /* Mensaje de Error Específico */
+        .error-message-block {
+            background-color: #fff3e0; 
+            border: 1px solid #ffcc80; 
+            border-left: 5px solid #ff9800; 
+            padding: 18px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace; 
+            font-size: 0.95em;
+            color: #e65100; 
+        }
+        .error-message-block strong {
+            display: block;
+            margin-bottom: 8px;
+            font-family: 'Montserrat', sans-serif;
+            color: #bf360c;
+            font-size: 1.1em;
+        }
+
+        /* Estructura de dos columnas para algunos datos */
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+        .column {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .column h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3em;
+            color: #3498db;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+        }
+
+        /* Próximos Pasos / Agenda */
+        .next-steps-card {
+            background: linear-gradient(135deg, #4e54c8, #8f94fb); 
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 25px;
+        }
+        .next-steps-card h2 {
+            color: white;
+            border-bottom-color: rgba(255,255,255,0.5);
+        }
+        .next-steps-card p, .next-steps-card li {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1em;
+        }
+         .next-steps-card ul li::before {
+            color: rgba(255,255,255,0.9);
+            content: '\f073'; 
+        }
+
+
+        /* Footer */
+        footer.unlocked {
+            display: block; /* O flex si es necesario para el layout interno */
+            text-align: center;
+            padding: 30px 0px;
+            margin-top: 20px;
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            width: 100%;
+        }
+        footer.unlocked p { margin: 0; font-size: 0.95em; }
+
+    </style>
+    <!-- Añade Font Awesome si quieres los iconos (opcional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="meeting-header">
+        <h1>Actualización y Diagnóstico: Sitio Web MasClima</h1>
+        <p class="date-info">Resumen de la Reunión | 21 de mayo de 2025 [21/05/2025]</p>
+    </header>
+
+    <!-- El contenido principal está oculto por defecto y se mostrará con JS si la contraseña es correcta -->
+    <main>
+        <section id="infraestructura">
+            <h2>Estado de la Infraestructura</h2>
+            <p>Se ha realizado un aumento en la infraestructura de memoria, disponiendo ahora de <strong>9GB de almacenamiento</strong>.</p>
+            <div class="highlight-box info">
+                <p><strong>Comportamiento de SQL Server:</strong> Es importante notar que SQL Server no libera memoria una vez que la ha utilizado. Si llega a usar el 90% de su capacidad, reserva esa memoria para futuros usos. Esto no implica que actualmente se esté usando el 90%; de hecho, el uso actual es del <strong>47%</strong>.</p>
+            </div>
+        </section>
+
+        <section id="problema-principal">
+            <h2>Identificación del Problema de Lentitud y Errores</h2>
+            <div class="columns">
+                <div class="column">
+                    <h3>Contexto del Error</h3>
+                    <ul>
+                        <li><strong>Usuarios:</strong> Se deshabilitaron los usuarios administrativos anteriores y se están utilizando otros actualmente.</li>
+                        <li><strong>Base de Datos:</strong> El problema reside en la base de datos "masclima".</li>
+                        <li><strong>Equipo Outsourcing:</strong> Aún no han identificado la causa raíz del problema.</li>
+                        <li><strong>Replicación:</strong> Natalia está trabajando en replicar el error para un mejor diagnóstico.</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Observaciones de Infraestructura</h3>
+                    <ul>
+                        <li>No aparecen logs relevantes en el Event Viewer de la base de datos (TLS1.2 y TLS1.3 mencionados, pero sin logs de error).</li>
+                        <li>System Center Operations Manager (SCOM) está realizando consultas y analizando el estado del servidor, pero <strong>no genera ninguna alerta</strong> que indique un problema desde su perspectiva.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight-box problem">
+                <p><strong>Pendiente:</strong> Es crucial aclarar <strong>cuándo exactamente se manifiesta la lentitud</strong>: ¿al explorar datos generales, al realizar una actividad específica, o en otros escenarios?</p>
+            </div>
+
+            <h3>Escenario Específico del Error Reportado</h3>
+            <p>El error se presenta consistentemente en el siguiente flujo para usuarios con rol <strong>DSEPP</strong> (y también para roles <strong>OAP</strong> y <strong>Gerente de Meta</strong>):</p>
+            <ol style="list-style-type: decimal; padding-left: 20px;">
+                <li>Ingresan a la sección de "Formulación DSEPP".</li>
+                <li>Intentan enviar comentarios sobre las metas de los indicadores.</li>
+                <li>Revisan el indicador.</li>
+                <li>Al intentar cargar el comentario y presionar el botón <strong>"Guardar"</strong>, se produce el error.</li>
+                <li>Un error similar ocurre al presionar el botón de <strong>"Validación"</strong>.</li>
+            </ol>
+            <div class="error-message-block">
+                <strong>Mensaje de Error:</strong>
+                "En este momento la aplicación no se encuentra disponible, por favor intente más tarde o comuníquese con el administrador."
+                (El mensaje también muestra la fecha y la URL donde ocurre).
+            </div>
+        </section>
+
+        <section id="red-balanceo">
+            <h2>Análisis del Flujo de Información y Balanceo de Carga</h2>
+            <p>MasClima opera con dos balanceadores de carga, uno para el frontend y otro para el backend:</p>
+            <ul>
+                <li><strong>Frontend responde a:</strong> <code>10.10.15.115</code></li>
+                <li><strong>Backend responde a:</strong> <code>10.10.15.117:443</code></li>
+            </ul>
+            <p>La persistencia de la sesión se mantiene con la IP fuente, con un <strong>timeout de 6 minutos</strong>. Se espera que la conexión del frontend al backend mantenga la autenticación durante este periodo.</p>
+            <div class="highlight-box info">
+                <p><strong>Algoritmo de Balanceo:</strong> Se utiliza <strong>Round Robin</strong>. Esto significa que las peticiones se distribuyen equitativamente entre los nodos sin un nodo preferido desde la perspectiva de la infraestructura.</p>
+            </div>
+        </section>
+
+        <section id="soluciones-pruebas">
+            <h2>Solución Implementada y Resultados Preliminares</h2>
+            <p>Se tomó la decisión de <strong>modificar el manejo de la sesión en el backend</strong> para que utilice un solo nodo. Esta medida busca evitar posibles conflictos o pérdidas de sesión derivados del balanceo.</p>
+            <div class="highlight-box"> <!-- Clase verde por defecto -->
+                <p><strong>¡Resultados Positivos!</strong> Las primeras pruebas con esta modificación han sido exitosas:</p>
+                <ul>
+                    <li>Se guardaron <strong>3 comentarios seguidos correctamente</strong>.</li>
+                    <li>Las pruebas realizadas al finalizar, utilizando los botones desde una <strong>navegación incógnita</strong>, también funcionaron correctamente.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="proximos-pasos" class="next-steps-card">
+            <h2>Próximos Pasos y Acuerdos</h2>
+            <ul>
+                <li><strong>Evaluación de Resultados:</strong> Jairo Alexander propone una reunión para mañana o pasado mañana para evaluar a fondo los resultados de la solución implementada.</li>
+                <li><strong>Siguiente Sesión Confirmada:</strong>
+                    <ul>
+                        <li><strong>Fecha y Hora:</strong> Viernes a las 3:00 PM.</li>
+                        <li><strong>Participantes Confirmados:</strong> Natalia, Jairo Alexander, Yoany (de la "firma").</li>
+                        <li><strong>Agendada por:</strong> Sebastián la agendó de forma inmediata.</li>
+                    </ul>
+                </li>
+                <li><strong>Recomendación Clave (Jairo):</strong> Se sugiere encarecidamente <strong>tomar pantallazos de cada error</strong> que se presente. Esto ayudará a identificar patrones y facilitará el diagnóstico futuro.</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>Minuta Reunión MasClima | Barracas (Camilo Barragán)</p>
+    </footer>
+
+    <script>
+        function checkPassword() {
+            const correctPassword = "20525"; // ¡Cambia esto por una contraseña más segura si es necesario!
+            let enteredPassword = "";
+            let attempts = 0;
+            const maxAttempts = 3; // Limitar intentos
+
+            while (enteredPassword !== correctPassword && attempts < maxAttempts) {
+                enteredPassword = prompt("Por favor, ingresa la contraseña para ver el contenido:");
+                if (enteredPassword === null) { // Si el usuario presiona "Cancelar"
+                    alert("Acceso cancelado.");
+                    return; // Salir de la función
+                }
+                attempts++;
+                if (enteredPassword === correctPassword) {
+                    document.body.classList.add('unlocked');
+                    document.querySelector('main').classList.add('unlocked');
+                    document.querySelector('footer').classList.add('unlocked');
+                    return; // Salir de la función si la contraseña es correcta
+                } else if (attempts < maxAttempts) {
+                    alert("Contraseña incorrecta. Intento " + attempts + " de " + maxAttempts + ".");
+                }
+            }
+
+            if (enteredPassword !== correctPassword) {
+                alert("Has excedido el número de intentos. Acceso denegado.");
+                // Opcionalmente, podrías redirigir o mostrar un mensaje permanente de acceso denegado
+                document.body.innerHTML = '<div style="text-align:center; padding-top:50px; font-family: Arial, sans-serif;"><h1>Acceso Denegado</h1><p>No tienes permiso para ver esta página.</p></div>';
+            }
+        }
+
+        // Llamar a la función cuando la ventana se haya cargado
+        window.onload = checkPassword;
+    </script>
+</body>
+</html>
